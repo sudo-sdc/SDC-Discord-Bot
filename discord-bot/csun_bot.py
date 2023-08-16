@@ -11,13 +11,13 @@ intents.members = True
 client = discord.Client(intents=intents)
 
 # Discord Bot Token
-TOKEN = 'YOUR_BOT_TOKEN'
+TOKEN = 'MTE0MTE3OTIyMzc0MzE1NjMzNQ.Gp6e2Q.uBZWyCqN8pUq5S3QFQDnrJu07JhhLcXak21pl8'
 
 # Email Configurations
-SMTP_SERVER = 'smtp.example.com'
+SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
-EMAIL_ADDRESS = 'your_email@example.com'
-EMAIL_PASSWORD = 'your_email_password'
+EMAIL_ADDRESS = 'SDCdiscordbot@gmail.com'
+EMAIL_PASSWORD = '@SDCdiscordbot'
 
 # Verification Code Storage
 verification_codes = {}
