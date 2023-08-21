@@ -1,58 +1,75 @@
 import discord
 import random
-import smtplib
-
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import os
+from dotenv import load_dotenv
+from discord.ext import commands
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True
 
-client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix='!', intents=intents)
 
-# Discord Bot Token
-TOKEN = 'MTE0MTE3OTIyMzc0MzE1NjMzNQ.Gp6e2Q.uBZWyCqN8pUq5S3QFQDnrJu07JhhLcXak21pl8'
+load_dotenv()
 
-# Email Configurations
-SMTP_SERVER = 'smtp.gmail.com'
-SMTP_PORT = 587
-EMAIL_ADDRESS = 'SDCdiscordbot@gmail.com'
-EMAIL_PASSWORD = '@SDCdiscordbot'
+# Set your SendGrid API key
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+TOKEN = os.environ.get('DISCORD_TOKEN')
+
 
 # Verification Code Storage
 verification_codes = {}
 
-@client.event
-async def on_ready():
-    print(f'Logged in as {client.user.name}')
-
-@client.event
-async def on_member_join(member):
-    verification_code = generate_verification_code()
-    verification_codes[member.id] = verification_code
-
-    email_subject = "Discord Verification Code"
-    email_body = f"Your verification code: {verification_code}"
-
-    send_email(member, email_subject, email_body)
-
-    await member.send("Check your email for the verification code.")
-
 def generate_verification_code():
     return str(random.randint(1000, 9999))
 
-def send_email(member, subject, body):
-    msg = MIMEMultipart()
-    msg['From'] = EMAIL_ADDRESS
-    msg['To'] = member.email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user.name}')
 
-    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-    server.starttls()
-    server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-    server.sendmail(EMAIL_ADDRESS, member.email, msg.as_string())
-    server.quit()
+@bot.event
+async def on_member_join(member):
+    verification_code = generate_verification_code()
+    verification_codes[member.id] = verification_code
+    await member.send(f"Welcome! Please verify your email by using the command `!verify verification_code`")
 
-client.run(TOKEN)
+@bot.command()
+async def verify(ctx, verification_code):
+    user_id = ctx.author.id
+    if user_id in verification_codes and verification_codes[user_id] == verification_code:
+        await ctx.send("Email verified successfully!")
+        await ctx.author.send("Thank you for verifying your email.")
+        del verification_codes[user_id]  # Remove the verification code after successful verification
+    else:
+        await ctx.send("Invalid verification code. Please check and try again.")
 
+@bot.command()
+async def submit_email(ctx, email):
+    if email.endswith("csun.edu"):  # Validate email domain
+        verification_code = verification_codes.get(ctx.author.id)
+        if verification_code:
+            await send_verification_email(email, ctx.author, verification_code)
+            await ctx.send("Verification email sent. Please check your inbox.")
+        else:
+            await ctx.send("Please join the server first before submitting your email.")
+    else:
+        await ctx.send("Invalid email format. Please provide a valid CSUN email.")
+
+async def send_verification_email(email, user, verification_code):
+    subject = "Discord Verification"
+    content = f"Welcome to the server! Please verify your email by using the command !verify {verification_code}"
+    message = Mail(
+        from_email='csunsdc@gmail.com',
+        to_emails=email,
+        subject=subject,
+        html_content=content)
+   
+    try:
+        sg = SendGridAPIClient(api_key=SENDGRID_API_KEY)
+        response = sg.send(message)
+    except Exception as e:
+        await user.send("Failed to send verification email. Please try again later.")
+
+bot.run(TOKEN)
