@@ -38,13 +38,13 @@ To get started with the bot, follow these steps:
 3. Add the bot token and sendgrid api key in your own `.env` file.
 
 ## Usage
-1. Create a dummy discord account 
-2. Run code locally on your machine 
-2. Join our test discord server [Dummy Discord Server](https://discord.gg/ChTwjgYYN)
-5. Bot will dm you to verify your csun.edu email 
-6. after the command '!submit_email' type your csun.edu email 
-7. Check your email for the !verify verification code and type that back into the discord dm
-8. csun.edu email is verified 
+1. Create a dummy discord account with no role. 
+2. Run code locally on your machine. 
+2. Join our test discord server [Dummy Discord Server](https://discord.gg/ChTwjgYYN).
+5. Use / commands to add your email. 
+6. check email verification token should be sent. 
+7. use / commmand to insert your token. 
+8. you now have a new role in the discord `member `.
 
 ## Roadmap
 - On verification the discord bot should allow access to the full server for members 
@@ -65,5 +65,5 @@ This project is licensed under the [MIT license](LICENSE).
 If you have any questions or need assistance, feel free to contact the project maintainer [SDC] at [csunsdc@gmail.com].
 
 ## Acknowledgements
-This discord bot was designed by and authored by [eanyakpor](https://github.com/eanyakpor) and [NimaJ2003](https://github.com/NimaJ2003). See https://github.com/sudo-sdc/SDC-Discord-Bot/graphs/contributors for a complete list of people who've contributed. 
+This discord bot was designed by and authored by [eanyakpor](https://github.com/eanyakpor), [NimaJ2003](https://github.com/NimaJ2003) and [BilinP](https://github.com/BilinP). See https://github.com/sudo-sdc/SDC-Discord-Bot/graphs/contributors for a complete list of people who've contributed. 
 
