@@ -44,7 +44,7 @@ To get started with the bot, follow these steps:
 5. Use / commands to add your email. 
 6. check email verification token should be sent. 
 7. use / commmand to insert your token. 
-8. you now have a new role in the discord `member `.
+8. you now have a new role in the discord `member`.
 
 ## Roadmap
 - On verification the discord bot should allow access to the full server for members 
